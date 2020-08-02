@@ -4,4 +4,5 @@ import './colors.dart';
 ThemeData theme = ThemeData(
   primarySwatch: cOrange,
   accentColor: cDeepOrange,
+  fontFamily: 'Lato',
 );

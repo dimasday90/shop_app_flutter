@@ -1,16 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-//* models
-import '../util/models/product.dart';
+//*pages
+import './cart_page.dart';
 
 //* widgets
-import '../widgets/product_card.dart';
+import '../widgets/sliver_products.dart';
+import '../widgets/badge.dart';
+import '../widgets/app_drawer.dart';
 
-//* dummy data
-import '../util/dummies/products.dart';
+//* enums
+import '../util/constants/enum.dart';
 
-class ProductOverviewPage extends StatelessWidget {
-  final List<Product> products = dummyProducts;
+//* providers
+import '../providers/cart.dart';
+
+class ProductOverviewPage extends StatefulWidget {
+  @override
+  _ProductOverviewPageState createState() => _ProductOverviewPageState();
+}
+
+class _ProductOverviewPageState extends State<ProductOverviewPage> {
+  bool _showFavorites = false;
 
   @override
   Widget build(BuildContext context) {
@@ -20,33 +31,52 @@ class ProductOverviewPage extends StatelessWidget {
         slivers: <Widget>[
           SliverAppBar(
             expandedHeight: mediaQuery.size.height * 0.2,
+            floating: false,
+            pinned: true,
+            snap: false,
             title: Text('Day Shop'),
             centerTitle: true,
-          ),
-          SliverPadding(
-            padding: EdgeInsets.symmetric(
-              vertical: 12,
-              horizontal: 10,
-            ),
-            sliver: SliverGrid(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 3 / 2,
-                mainAxisSpacing: 20,
-                crossAxisSpacing: 15,
+            actions: <Widget>[
+              Consumer<Cart>(
+                child: IconButton(
+                  icon: Icon(Icons.shopping_cart),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(CartPage.routeName);
+                  },
+                ),
+                builder: (context, cart, child) => Badge(
+                  child: child,
+                  value: cart.itemCount.toString(),
+                ),
               ),
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  return ProductCard(
-                    product: products[index],
-                  );
+              PopupMenuButton(
+                onSelected: (value) {
+                  setState(() {
+                    if (value == FilterOptions.showFavorites) {
+                      _showFavorites = true;
+                    } else {
+                      _showFavorites = false;
+                    }
+                  });
                 },
-                childCount: products.length,
+                icon: Icon(Icons.more_vert),
+                itemBuilder: (_) => [
+                  PopupMenuItem(
+                    child: Text('Show All'),
+                    value: FilterOptions.showAll,
+                  ),
+                  PopupMenuItem(
+                    child: Text('Show Favorites'),
+                    value: FilterOptions.showFavorites,
+                  ),
+                ],
               ),
-            ),
-          )
+            ],
+          ),
+          SliverProducts(_showFavorites),
         ],
       ),
+      drawer: AppDrawer(),
     );
   }
 }
