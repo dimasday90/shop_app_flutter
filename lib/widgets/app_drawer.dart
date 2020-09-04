@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 
 //* pages
 import '../pages/orders_page.dart';
+import '../pages/user_products_page.dart';
+
+//* widgets
+import './drawer_menu_tile.dart';
 
 class AppDrawer extends StatelessWidget {
   @override
@@ -14,21 +18,18 @@ class AppDrawer extends StatelessWidget {
             automaticallyImplyLeading: false,
           ),
           Divider(),
-          ListTile(
-            leading: Icon(Icons.shopping_cart),
-            title: Text('Shop'),
-            onTap: () {
-              Navigator.of(context).pushReplacementNamed('/');
-            },
-          ),
+          DrawerMenuTile(
+              icon: Icons.shopping_cart, menuTitle: 'Shop', route: '/'),
           Divider(),
-          ListTile(
-            leading: Icon(Icons.payment),
-            title: Text('Orders'),
-            onTap: () {
-              Navigator.of(context).pushReplacementNamed(OrdersPage.routeName);
-            },
-          ),
+          DrawerMenuTile(
+              icon: Icons.payment,
+              menuTitle: 'Orders',
+              route: OrdersPage.routeName),
+          Divider(),
+          DrawerMenuTile(
+              icon: Icons.mode_edit,
+              menuTitle: 'Products',
+              route: UserProductsPage.routeName),
         ],
       ),
     );

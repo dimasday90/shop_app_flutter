@@ -52,14 +52,17 @@ class _OrderItemState extends State<OrderItem> {
                   return ListTile(
                     contentPadding:
                         EdgeInsets.only(top: 4, bottom: 4, left: 18, right: 12),
-                    leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.network(
-                        product.imageUrl,
-                        fit: BoxFit.contain,
-                        width: MediaQuery.of(context).size.width * 0.2,
-                      ),
+                    leading: CircleAvatar(
+                      backgroundImage: NetworkImage(product.imageUrl),
                     ),
+                    // leading: ClipRRect(
+                    //   borderRadius: BorderRadius.circular(8),
+                    //   child: Image.network(
+                    //     product.imageUrl,
+                    //     fit: BoxFit.contain,
+                    //     width: MediaQuery.of(context).size.width * 0.2,
+                    //   ),
+                    // ),
                     title: Text(
                       product.title,
                       style:

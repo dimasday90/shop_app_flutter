@@ -60,7 +60,25 @@ class ProductCard extends StatelessWidget {
             ),
             onPressed: () {
               cart.addItem(
-                  product.id, product.title, product.price, product.imageUrl);
+                product.id,
+                product.title,
+                product.price,
+                product.imageUrl,
+              );
+              Scaffold.of(context).hideCurrentSnackBar();
+              Scaffold.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Added item to cart'),
+                  action: SnackBarAction(
+                    label: 'UNDO',
+                    onPressed: () {
+                      cart.undoAddItem(product.id);
+                      Scaffold.of(context).hideCurrentSnackBar();
+                    },
+                  ),
+                  duration: Duration(seconds: 3),
+                ),
+              );
             },
           ),
         ),
