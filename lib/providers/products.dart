@@ -1,4 +1,7 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+
+import '../util/apis/api_request.dart';
 
 class Product with ChangeNotifier {
   final String id;
@@ -67,16 +70,25 @@ class Products with ChangeNotifier {
       _items.where((item) => item.isFavorite).toList();
 
   //* methods
-  void addProduct(Product product) {
-    Product newProduct = Product(
-      id: DateTime.now().toString(),
-      title: product.title,
-      price: product.price,
-      description: product.description,
-      imageUrl: product.imageUrl,
-    );
-    _items.add(newProduct);
-    notifyListeners();
+  Future<void> addProduct(Product product) {
+    return APIRequest.postNewProduct({
+      'title': product.title,
+      'price': product.price,
+      'description': product.description,
+      'imageUrl': product.imageUrl,
+    }).then((response) {
+      Product newProduct = Product(
+        id: json.decode(response.body)['name'],
+        title: product.title,
+        price: product.price,
+        description: product.description,
+        imageUrl: product.imageUrl,
+      );
+      _items.add(newProduct);
+      notifyListeners();
+    }).catchError((error) {
+      throw error;
+    });
   }
 
   void updateProduct(String id, Product newProduct) {
