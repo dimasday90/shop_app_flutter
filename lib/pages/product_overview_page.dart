@@ -14,6 +14,7 @@ import '../util/constants/enum.dart';
 
 //* providers
 import '../providers/cart.dart';
+import '../providers/products.dart';
 
 class ProductOverviewPage extends StatefulWidget {
   @override
@@ -22,6 +23,31 @@ class ProductOverviewPage extends StatefulWidget {
 
 class _ProductOverviewPageState extends State<ProductOverviewPage> {
   bool _showFavorites = false;
+  bool _isInit = true;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<Products>(context, listen: false)
+          .fetchAndSetProducts()
+          .then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    }
+    _isInit = false;
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +99,8 @@ class _ProductOverviewPageState extends State<ProductOverviewPage> {
               ),
             ],
           ),
+          if (_isLoading)
+            SliverToBoxAdapter(child: Center(child: LinearProgressIndicator())),
           SliverProducts(_showFavorites),
         ],
       ),

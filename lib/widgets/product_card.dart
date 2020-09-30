@@ -41,17 +41,16 @@ class ProductCard extends StatelessWidget {
         footer: GridTileBar(
           backgroundColor: bBlack54,
           leading: Consumer<Product>(
-              builder: (ctx, product, _) => IconButton(
-                    icon: Icon(
-                      product.isFavorite
-                          ? Icons.favorite
-                          : Icons.favorite_border,
-                      color: cFavorite,
-                    ),
-                    onPressed: () {
-                      product.toggleFavoriteStatus();
-                    },
-                  )),
+            builder: (ctx, product, _) => IconButton(
+              icon: Icon(
+                product.isFavorite ? Icons.favorite : Icons.favorite_border,
+                color: cFavorite,
+              ),
+              onPressed: () {
+                product.toggleFavoriteStatus();
+              },
+            ),
+          ),
           title: Text(product.title),
           trailing: IconButton(
             icon: Icon(

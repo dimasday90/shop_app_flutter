@@ -63,21 +63,7 @@ class CartPage extends StatelessWidget {
                           ),
                           backgroundColor: Theme.of(context).primaryColor,
                         ),
-                        FlatButton(
-                          onPressed: () {
-                            orders.addOrder(
-                                cart.items.values.toList(), cart.totalPrice);
-                            cart.clear();
-                          },
-                          child: Text(
-                            'ORDER NOW',
-                            style: TextStyle(
-                              fontFamily: 'Anton',
-                              fontSize: 16,
-                            ),
-                          ),
-                          textColor: Theme.of(context).accentColor,
-                        ),
+                        OrderButton(cart: cart, orders: orders),
                       ],
                     ),
                   ),
@@ -89,6 +75,51 @@ class CartPage extends StatelessWidget {
                 'Your cart is empty. Add one now!',
               ),
             ),
+    );
+  }
+}
+
+class OrderButton extends StatefulWidget {
+  const OrderButton({
+    Key key,
+    @required this.cart,
+    @required this.orders,
+  }) : super(key: key);
+
+  final Cart cart;
+  final Orders orders;
+
+  @override
+  _OrderButtonState createState() => _OrderButtonState();
+}
+
+class _OrderButtonState extends State<OrderButton> {
+  bool _isLoading = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return FlatButton(
+      onPressed: (widget.cart.totalPrice <= 0 || _isLoading)
+          ? null
+          : () async {
+              setState(() {
+                _isLoading = true;
+              });
+              await widget.orders.addOrder(
+                  widget.cart.items.values.toList(), widget.cart.totalPrice);
+              setState(() {
+                _isLoading = false;
+              });
+              widget.cart.clear();
+            },
+      child: Text(
+        'ORDER NOW',
+        style: TextStyle(
+          fontFamily: 'Anton',
+          fontSize: 16,
+        ),
+      ),
+      textColor: Theme.of(context).accentColor,
     );
   }
 }

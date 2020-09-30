@@ -45,7 +45,7 @@ class _EditProductPageState extends State<EditProductPage> {
           ModalRoute.of(context).settings.arguments as String;
       if (productId != null) {
         final Product _selectedProduct =
-            Provider.of<Products>(context).findById(productId);
+            Provider.of<Products>(context, listen: false).findById(productId);
         _editedProduct = _selectedProduct;
         _initValues = {
           "title": _editedProduct.title,
@@ -84,28 +84,23 @@ class _EditProductPageState extends State<EditProductPage> {
     }
   }
 
-  void _submitForm() {
+  Future<void> _submitForm() async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
       setState(() {
         _isLoading = true;
       });
       if (_editedProduct.id != null) {
-        Provider.of<Products>(context, listen: false)
-            .updateProduct(_editedProduct.id, _editedProduct);
-        setState(() {
-          _isLoading = false;
-        });
-        Navigator.of(context).pop();
-      } else {
-        Provider.of<Products>(context, listen: false)
-            .addProduct(_editedProduct)
-            .catchError((error) {
-          return showDialog(
+        try {
+          await Provider.of<Products>(context, listen: false)
+              .updateProduct(_editedProduct.id, _editedProduct);
+        } catch (error) {
+          showDialog(
               context: context,
               builder: (context) => AlertDialog(
                       title: Text('An error occurred'),
-                      content: Text('Something went wrong!'),
+                      content:
+                          Text('Edit failed because the inputs are invalid'),
                       actions: [
                         FlatButton(
                           onPressed: () {
@@ -114,12 +109,36 @@ class _EditProductPageState extends State<EditProductPage> {
                           child: Text('Back'),
                         )
                       ]));
-        }).then((_) {
+        } finally {
           setState(() {
             _isLoading = false;
           });
           Navigator.of(context).pop();
-        });
+        }
+      } else {
+        try {
+          await Provider.of<Products>(context, listen: false)
+              .addProduct(_editedProduct);
+        } catch (error) {
+          showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                      title: Text('An error occurred'),
+                      content: Text('Add item failed due to error occurred'),
+                      actions: [
+                        FlatButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('Back'),
+                        )
+                      ]));
+        } finally {
+          setState(() {
+            _isLoading = false;
+          });
+          Navigator.of(context).pop();
+        }
       }
     } else {
       return;

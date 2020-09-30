@@ -22,6 +22,7 @@ class UserProductsItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scaffold = Scaffold.of(context);
     return ListTile(
       leading: CircleAvatar(
         backgroundImage: NetworkImage(
@@ -44,8 +45,16 @@ class UserProductsItem extends StatelessWidget {
           ),
           VerticalDivider(),
           IconButton(
-            onPressed: () {
-              Provider.of<Products>(context, listen: false).deleteProduct(id);
+            onPressed: () async {
+              try {
+                await Provider.of<Products>(context, listen: false)
+                    .deleteProduct(id);
+              } catch (error) {
+                scaffold.hideCurrentSnackBar();
+                scaffold.showSnackBar(SnackBar(
+                  content: Text(error),
+                ));
+              }
             },
             icon: Icon(Icons.delete),
             color: Theme.of(context).errorColor,
