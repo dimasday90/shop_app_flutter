@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 //* providers
 import '../providers/products.dart';
 import '../providers/cart.dart';
+import '../providers/auth.dart';
 
 //* colors
 import '../util/constants/colors.dart';
@@ -26,6 +27,7 @@ class ProductCard extends StatelessWidget {
       context,
       listen: false,
     );
+    final auth = Provider.of<Auth>(context, listen: false);
     return ClipRRect(
       borderRadius: BorderRadius.circular(11),
       child: GridTile(
@@ -47,7 +49,7 @@ class ProductCard extends StatelessWidget {
                 color: cFavorite,
               ),
               onPressed: () {
-                product.toggleFavoriteStatus();
+                product.toggleFavoriteStatus(auth.userId, auth.token);
               },
             ),
           ),

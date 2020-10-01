@@ -29,14 +29,13 @@ class Product with ChangeNotifier {
   }
 
   //* methods
-  Future<void> toggleFavoriteStatus() async {
+  Future<void> toggleFavoriteStatus(userId, token) async {
     final oldStatus = isFavorite;
     isFavorite = !isFavorite;
     notifyListeners();
     try {
-      final response = await APIRequest.toogleFavorite(id, {
-        "isFavorite": isFavorite,
-      });
+      final response =
+          await APIRequest.toogleFavorite(id, userId, isFavorite, token);
       if (response.statusCode >= 400) {
         _setIsFavoriteVal(oldStatus);
       }
@@ -82,6 +81,11 @@ class Products with ChangeNotifier {
     // ),
   ];
 
+  final String userId;
+  final String authToken;
+
+  Products(this.userId, this.authToken, this._items);
+
   //* getters
   List<Product> get items => [..._items];
 
@@ -89,23 +93,29 @@ class Products with ChangeNotifier {
       _items.where((item) => item.isFavorite).toList();
 
   //* methods
-  Future<void> fetchAndSetProducts() async {
+  Future<void> fetchAndSetProducts([bool filterByUser = false]) async {
     try {
-      final response = await APIRequest.getProducts();
+      final response =
+          await APIRequest.getProducts(userId, authToken, filterByUser);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
-      final List<Product> loadedProducts = [];
-      if (extractedData != null) {
-        extractedData.forEach((prodId, prodData) {
-          loadedProducts.add(Product(
-            id: prodId,
-            title: prodData['title'],
-            description: prodData['description'],
-            imageUrl: prodData['imageUrl'],
-            price: prodData['price'],
-            isFavorite: prodData['isFavorite'],
-          ));
-        });
+      if (extractedData == null) {
+        return;
       }
+      final favoriteResponse =
+          await APIRequest.getUserFavorites(userId, authToken);
+      final favoriteData = json.decode(favoriteResponse.body);
+      final List<Product> loadedProducts = [];
+      extractedData.forEach((prodId, prodData) {
+        loadedProducts.add(Product(
+          id: prodId,
+          title: prodData['title'],
+          description: prodData['description'],
+          imageUrl: prodData['imageUrl'],
+          price: prodData['price'],
+          isFavorite:
+              favoriteData == null ? false : favoriteData[prodId] ?? false,
+        ));
+      });
       _items = loadedProducts;
       notifyListeners();
     } catch (error) {
@@ -120,8 +130,8 @@ class Products with ChangeNotifier {
         'price': product.price,
         'description': product.description,
         'imageUrl': product.imageUrl,
-        'isFavorite': false,
-      });
+        'creatorId': userId,
+      }, authToken);
       Product newProduct = Product(
         id: json.decode(response.body)['name'],
         title: product.title,
@@ -140,7 +150,7 @@ class Products with ChangeNotifier {
   Future<void> updateProduct(String id, Product newProduct) async {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
-      await APIRequest.patchProduct(id, newProduct);
+      await APIRequest.patchProduct(id, newProduct, authToken);
       _items[prodIndex] = newProduct;
       notifyListeners();
     } else {
@@ -152,7 +162,7 @@ class Products with ChangeNotifier {
     final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
     Product existingProduct = _items[existingProductIndex];
 
-    final response = await APIRequest.deleteProduct(id);
+    final response = await APIRequest.deleteProduct(id, authToken);
 
     if (response.statusCode >= 400) {
       _items.insert(existingProductIndex, existingProduct);

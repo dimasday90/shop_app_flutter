@@ -24,11 +24,15 @@ class OrderItem {
 
 class Orders with ChangeNotifier {
   List<OrderItem> _orders = [];
+  final String userId;
+  final String authToken;
+
+  Orders(this.userId, this.authToken, this._orders);
 
   List<OrderItem> get orders => [..._orders];
 
   Future<void> fetchOrders() async {
-    final response = await APIRequest.getOrders();
+    final response = await APIRequest.getOrders(userId, authToken);
     List<OrderItem> loadedOrders = [];
     final extractedData = json.decode(response.body) as Map<String, dynamic>;
     if (extractedData == null) {
@@ -56,7 +60,8 @@ class Orders with ChangeNotifier {
 
   Future<void> addOrder(List<CartItem> cartProducts, double total) async {
     final timestamp = DateTime.now();
-    final response = await APIRequest.addOrder(cartProducts, total, timestamp);
+    final response = await APIRequest.addOrder(
+        cartProducts, total, timestamp, userId, authToken);
     _orders.insert(
         0,
         OrderItem(
