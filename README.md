@@ -17,7 +17,7 @@ A learning app, which contain features such as:
 
 ## Download APK
 
-You can download apk release [here](https://drive.google.com/file/d/1Gbavd8GZCDBzy3ZIeojT6BaVKVfeZ9La/view?usp=sharing)
+You can download apk release [here](https://drive.google.com/file/d/1IN8dCm0YdLiSIeZGM4JAxGtFgL8wZtpX/view?usp=sharing)
 
 ## Credits
 
