@@ -72,13 +72,13 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> signUp(String email, String password) async {
-    return _authenticate(email, password, AuthMode.signup);
+    await _authenticate(email, password, AuthMode.signup);
     // final response = await _authenticate(email, password, AuthMode.signup);
     // final extractedData = json.decode(response.body);
   }
 
   Future<void> login(String email, String password) async {
-    return _authenticate(email, password, AuthMode.login);
+    await _authenticate(email, password, AuthMode.login);
     // final response = await _authenticate(email, password, AuthMode.login);
     // final extractedData = json.decode(response.body);
   }
@@ -103,17 +103,17 @@ class Auth with ChangeNotifier {
     return true;
   }
 
-  void logout() async {
+  Future<void> logout() async {
     if (_authTimer != null) {
       _authTimer.cancel();
       _authTimer = null;
     }
-    final prefs = await SharedPreferences.getInstance();
-    prefs.clear();
     _token = null;
     _userId = null;
     _expiryDate = null;
     notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove('userData');
   }
 
   void autoLogout() {

@@ -22,7 +22,8 @@ class APIRequest {
       "returnSecureToken": true,
     };
 
-    return http.post('$firebaseAuthEndPoint/account:signUp?key=$firebaseAPIKey',
+    return http.post(
+        '$firebaseAuthEndPoint/accounts:signUp?key=$firebaseAPIKey',
         body: json.encode(param));
   }
 
@@ -34,7 +35,7 @@ class APIRequest {
     };
 
     return http.post(
-        '$firebaseAuthEndPoint/account:signInWithPassword?key=$firebaseAPIKey',
+        '$firebaseAuthEndPoint/accounts:signInWithPassword?key=$firebaseAPIKey',
         body: json.encode(param));
   }
 
@@ -79,7 +80,7 @@ class APIRequest {
 
   static Future<http.Response> toogleFavorite(
       String id, String userId, bool favoriteStatus, String token) {
-    return http.patch(
+    return http.put(
         '$baseUrl$userFavoritesEndPoint/$userId/$id.json?auth=$token',
         body: json.encode(favoriteStatus));
   }
