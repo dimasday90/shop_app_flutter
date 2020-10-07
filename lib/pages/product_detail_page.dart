@@ -30,9 +30,12 @@ class ProductDetailPage extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              background: Image.network(
-                loadedProduct.imageUrl,
-                fit: BoxFit.cover,
+              background: Hero(
+                tag: loadedProduct.id,
+                child: Image.network(
+                  loadedProduct.imageUrl,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),

@@ -11,6 +11,9 @@ import './drawer_menu_tile.dart';
 //* providers
 import '../providers/auth.dart';
 
+//* utils
+import '../util/helpers/custom_route.dart';
+
 class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -31,7 +34,16 @@ class AppDrawer extends StatelessWidget {
           DrawerMenuTile(
             icon: Icons.payment,
             menuTitle: 'Orders',
-            route: OrdersPage.routeName,
+            onTapHandler: () {
+              Navigator.of(context).pushReplacement(
+                CustomRoute(
+                  builder: (ctx) => OrdersPage(),
+                  settings: RouteSettings(
+                    name: OrdersPage.routeName,
+                  ),
+                ),
+              );
+            },
           ),
           Divider(),
           DrawerMenuTile(
