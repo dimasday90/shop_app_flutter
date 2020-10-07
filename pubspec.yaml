@@ -50,7 +50,7 @@ flutter:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/images/product-placeholder.png"
+  image_path: "assets/icons/icons8-online-shop-100.png"
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/product-placeholder.png
