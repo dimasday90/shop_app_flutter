@@ -1,16 +1,24 @@
-# shop_app
+# Day Shop
 
-A new Flutter project.
+A learning app, which contain features such as:
 
-## Getting Started
+* Create, edit, and delet product
+* Show all product of all user and order them
+* Select one product as user's favorites
 
-This project is a starting point for a Flutter application.
+## Run dev setup
 
-A few resources to get you started if this is your first Flutter project:
+* Clone this repo
+* Run Android emulator or use your real device
+* Run this command on your terminal from directory, or use run with/without debug from your IDE (VS Code / Android Studio is recommended)
+    ```
+    flutter run
+    ```
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+## Download APK
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+You can download apk release [here](https://drive.google.com/file/d/1Gbavd8GZCDBzy3ZIeojT6BaVKVfeZ9La/view?usp=sharing)
+
+## Credits
+
+[Online Shop icon](https://icons8.com/icons/set/online-shop) icon by [Icons8](https://icons8.com)
